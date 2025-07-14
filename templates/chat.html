@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Disease Diagnosis Chatbot</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f5f5;
+        }
+        .chatbox {
+            max-width: 800px;
+            margin: 50px auto;
+            background: rgb(245, 244, 244);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+        }
+        .messages {
+            height: 600px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .msg {
+            margin: 10px 0;
+            padding: 12px 15px;
+            border-radius: 20px;
+            max-width: 70%;
+        }
+        .user {
+            align-self: flex-end;
+            background-color: #0f972a;
+            color: white;
+        }
+        .bot {
+            align-self: flex-start;
+            background-color: #e0e0e0;
+        }
+        .input-area {
+            margin-top: 15px;
+            display: flex;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 15px;
+            margin-left: 10px;
+            background: #0f972a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chatbox">
+        <div class="messages" id="chatLog">
+            <div class="msg bot">👋 Hey there! I’m your tiny AI Medical Assistant 🤖—ready to check your symptoms or just have a healthy chat! 🩺💬
+</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Type your symptoms...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const inputField = document.getElementById("userInput");
+            const chatLog = document.getElementById("chatLog");
+            const message = inputField.value.trim();
+            if (!message) return;
+
+            // User message
+            const userMsg = document.createElement("div");
+            userMsg.className = "msg user";
+            userMsg.innerText = message;
+            chatLog.appendChild(userMsg);
+            inputField.value = "";
+
+            // Bot "typing..." message
+            const botTyping = document.createElement("div");
+            botTyping.className = "msg bot";
+            botTyping.innerText = "🤖 typing...";
+            chatLog.appendChild(botTyping);
+            chatLog.scrollTop = chatLog.scrollHeight;
+
+            // Wait & get response
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: message })
+            });
+            const data = await response.json();
+
+            // Replace "typing..." with real reply
+            botTyping.innerText = data.reply;
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+    </script>
+</body>
+</html>

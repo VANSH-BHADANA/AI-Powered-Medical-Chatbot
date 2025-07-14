@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diagnosis Result</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .chat-bubble {
+            background-color: #e5e5ea;
+            padding: 12px 18px;
+            border-radius: 20px;
+            margin: 10px 0;
+            display: inline-block;
+            max-width: 80%;
+        }
+        .chat-bubble.user {
+            background-color: #007aff;
+            color: white;
+            margin-left: auto;
+        }
+        .chat-bubble.bot {
+            background-color: #f0f0f0;
+            color: black;
+            margin-right: auto;
+        }
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #007aff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .back-button:hover {
+            background: #005fcc;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-bubble user">
+            I have these symptoms: {{ symptoms|join(', ') }}
+        </div>
+        <div class="chat-bubble bot">
+            🤖 Based on your symptoms, you might have: <strong>{{ prediction }}</strong>
+        </div>
+        <form action="/">
+            <button class="back-button">🔁 Diagnose Again</button>
+        </form>
+    </div>
+</body>
+</html>
