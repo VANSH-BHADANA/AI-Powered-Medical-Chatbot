@@ -24,7 +24,7 @@ This is a fun, interactive, and **locally hosted AI chatbot** that:
 
 ```bash
 # Clone this repo
-git clone https://github.com/your-username/disease-chatbot-genai.git
+git clone https://github.com/your-username/disease-chatbot.git
 cd disease-chatbot-genai
 
 # (Optional) Create a virtual environment
