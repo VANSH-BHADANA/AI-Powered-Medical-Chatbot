@@ -1,105 +1,148 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Disease Diagnosis Chatbot</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Medical Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Using Marked.js to render Markdown from the bot's replies -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f5f5f5;
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark gray background */
         }
-        .chatbox {
-            max-width: 800px;
-            margin: 50px auto;
-            background: rgb(245, 244, 244);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+        /* Custom scrollbar for a cleaner look */
+        .messages::-webkit-scrollbar {
+            width: 8px;
         }
-        .messages {
-            height: 600px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
+        .messages::-webkit-scrollbar-track {
+            background: #1f2937;
         }
-        .msg {
-            margin: 10px 0;
-            padding: 12px 15px;
+        .messages::-webkit-scrollbar-thumb {
+            background-color: #4b5563;
             border-radius: 20px;
-            max-width: 70%;
+            border: 3px solid #1f2937;
         }
-        .user {
-            align-self: flex-end;
-            background-color: #0f972a;
-            color: white;
+        /* Typing indicator animation */
+        .typing-dot {
+            animation: blink 1.4s infinite both;
         }
-        .bot {
-            align-self: flex-start;
-            background-color: #e0e0e0;
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
         }
-        .input-area {
-            margin-top: 15px;
-            display: flex;
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
         }
-        input[type="text"] {
-            flex: 1;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-        }
-        button {
-            padding: 10px 15px;
-            margin-left: 10px;
-            background: #0f972a;
-            color: white;
-            border: none;
-            border-radius: 8px;
+        @keyframes blink {
+            0% { opacity: 0.2; }
+            20% { opacity: 1; }
+            100% { opacity: 0.2; }
         }
     </style>
 </head>
-<body>
-    <div class="chatbox">
-        <div class="messages" id="chatLog">
-            <div class="msg bot">👋 Hey there! I’m your tiny AI Medical Assistant 🤖—ready to check your symptoms or just have a healthy chat! 🩺💬
-</div>
+<body class="antialiased text-gray-200">
+
+    <div class="flex flex-col h-screen max-w-2xl mx-auto p-4">
+        <header class="text-center mb-4">
+            <h1 class="text-2xl font-bold text-white">AI Medical Assistant</h1>
+        </header>
+
+        <!-- Chat messages area -->
+        <div id="chatLog" class="messages flex-1 overflow-y-auto bg-gray-800 p-4 rounded-lg">
+            <!-- Initial message from the bot, passed from Flask -->
+            <div class="msg-container flex justify-start">
+                <div class="msg bot bg-gray-700 text-white p-3 rounded-lg rounded-bl-none max-w-md">
+                    {{ intro | safe }}
+                </div>
+            </div>
         </div>
-        <div class="input-area">
-            <input type="text" id="userInput" placeholder="Type your symptoms...">
-            <button onclick="sendMessage()">Send</button>
+
+        <!-- Input area -->
+        <div class="input-area mt-4 flex items-center">
+            <input type="text" id="userInput" placeholder="Type your symptoms..." class="flex-1 bg-gray-700 border border-gray-600 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none text-white">
+            <button onclick="sendMessage()" class="ml-3 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-5 rounded-lg transition-colors">
+                Send
+            </button>
         </div>
     </div>
 
     <script>
+        const chatLog = document.getElementById("chatLog");
+        const userInput = document.getElementById("userInput");
+
+        // Allow sending message with the Enter key
+        userInput.addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
+
+        function addMessageToChat(sender, message) {
+            const msgContainer = document.createElement("div");
+            msgContainer.className = `msg-container flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+
+            const msgDiv = document.createElement("div");
+            msgDiv.className = `msg p-3 rounded-lg max-w-md ${sender === 'user' ? 'bg-blue-600 text-white rounded-br-none' : 'bg-gray-700 text-white rounded-bl-none'}`;
+            
+            // Use marked.js to render bold, italics, etc. from the bot's reply
+            msgDiv.innerHTML = marked.parse(message);
+
+            msgContainer.appendChild(msgDiv);
+            chatLog.appendChild(msgContainer);
+            chatLog.scrollTop = chatLog.scrollHeight; // Auto-scroll to the latest message
+        }
+
+        function showTypingIndicator() {
+            const typingContainer = document.createElement("div");
+            typingContainer.id = "typing-indicator";
+            typingContainer.className = "msg-container flex justify-start";
+            
+            typingContainer.innerHTML = `
+                <div class="msg bot bg-gray-700 text-white p-3 rounded-lg rounded-bl-none">
+                    <div class="flex items-center">
+                        <span class="typing-dot h-2 w-2 bg-gray-400 rounded-full mr-1"></span>
+                        <span class="typing-dot h-2 w-2 bg-gray-400 rounded-full mr-1"></span>
+                        <span class="typing-dot h-2 w-2 bg-gray-400 rounded-full"></span>
+                    </div>
+                </div>
+            `;
+            chatLog.appendChild(typingContainer);
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById("typing-indicator");
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
         async function sendMessage() {
-            const inputField = document.getElementById("userInput");
-            const chatLog = document.getElementById("chatLog");
-            const message = inputField.value.trim();
+            const message = userInput.value.trim();
             if (!message) return;
 
-            // User message
-            const userMsg = document.createElement("div");
-            userMsg.className = "msg user";
-            userMsg.innerText = message;
-            chatLog.appendChild(userMsg);
-            inputField.value = "";
+            addMessageToChat('user', message);
+            userInput.value = "";
+            showTypingIndicator();
 
-            // Bot "typing..." message
-            const botTyping = document.createElement("div");
-            botTyping.className = "msg bot";
-            botTyping.innerText = "🤖 typing...";
-            chatLog.appendChild(botTyping);
-            chatLog.scrollTop = chatLog.scrollHeight;
+            try {
+                const response = await fetch("/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: message })
+                });
+                const data = await response.json();
+                
+                removeTypingIndicator();
+                addMessageToChat('bot', data.reply);
 
-            // Wait & get response
-            const response = await fetch("/chat", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: message })
-            });
-            const data = await response.json();
-
-            // Replace "typing..." with real reply
-            botTyping.innerText = data.reply;
-            chatLog.scrollTop = chatLog.scrollHeight;
+            } catch (error) {
+                removeTypingIndicator();
+                addMessageToChat('bot', 'Sorry, something went wrong. Please try again.');
+                console.error("Error sending message:", error);
+            }
         }
     </script>
 </body>
