@@ -25,7 +25,7 @@ This is a fun, interactive, and **locally hosted AI chatbot** that:
 ```bash
 # Clone this repo
 git clone https://github.com/VANSH-BHADANA/disease-chatbot.git
-cd disease-chatbot-genai
+cd disease-chatbot
 
 # (Optional) Create a virtual environment
 python -m venv venv
@@ -33,9 +33,6 @@ venv\Scripts\activate  # On Windows
 
 # Install required packages
 pip install -r requirements.txt
-
-# Setup local database
-python setup_db.py
 
 # Run the app
 python app.py
