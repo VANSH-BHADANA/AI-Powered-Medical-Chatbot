@@ -8,7 +8,7 @@ llm = Llama(
 )
 
 # Basic chat loop
-print("🤖 LLaMA is ready! Type 'exit' to stop.");
+print("🤖 LLaMA is ready! Type 'exit' to stop.")
 while True:
     prompt = input("🧑 You: ")
     if prompt.lower() == "exit":
