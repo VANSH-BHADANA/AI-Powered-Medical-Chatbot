@@ -106,7 +106,7 @@ def chat():
     if not matched_symptoms:
         reply = handle_general_chat(user_input, session_id)
     else:
-        reply = handle_symptom_logic(matched_symptoms
+        reply = handle_symptom_logic(matched_symptoms)
     
     with sqlite3.connect(DATABASE_NAME) as conn:
         conn.execute("INSERT INTO chat_history (session_id, sender, message) VALUES (?, ?, ?)", 
