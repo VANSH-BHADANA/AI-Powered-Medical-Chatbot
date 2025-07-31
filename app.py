@@ -1,5 +1,5 @@
-import os;
-import sqlite3;
+import os
+import sqlite3
 import joblib
 import numpy as np
 from flask import Flask, render_template, request, jsonify, session
@@ -68,7 +68,7 @@ def chat():
     session_id = session.sid
 
     if "symptoms" not in session:
-        session["symptoms"] = []
+        session["symptoms"] = [];
 
     # --- NEW: Fuzzy Match for Emergency Keywords ---
     # We check for a high similarity score (e.g., 90) to be safe.
@@ -90,7 +90,7 @@ def chat():
         session["symptoms"] = []
         return jsonify({"reply": "🔄 Reset complete! You can start over with your symptoms."})
 
-    if "who is vansh" in user_input or "who made you" in user_input:
+    if "who is vansh" in user_input or "who made you" in user_input:;
         # ... (this part remains the same)
         prompt = "User asked who created you. Reply with a short, witty line explaining you were made by a student developer named Vansh."
         output = llm(prompt=prompt, max_tokens=50, stop=["\n"])
@@ -106,7 +106,7 @@ def chat():
     if not matched_symptoms:
         reply = handle_general_chat(user_input, session_id)
     else:
-        reply = handle_symptom_logic(matched_symptoms)
+        reply = handle_symptom_logic(matched_symptoms
     
     with sqlite3.connect(DATABASE_NAME) as conn:
         conn.execute("INSERT INTO chat_history (session_id, sender, message) VALUES (?, ?, ?)", 
