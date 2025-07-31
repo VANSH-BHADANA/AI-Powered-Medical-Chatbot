@@ -14,7 +14,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # --- Load Models & Encoders ---
-try:
+try
     model = joblib.load("model.pkl")
     label_encoder = joblib.load("label_encoder.pkl")
     llm = Llama(model_path="mistral-7b-instruct-v0.1.Q4_K_M.gguf", n_ctx=2048)
