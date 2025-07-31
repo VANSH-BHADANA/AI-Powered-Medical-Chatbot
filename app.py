@@ -170,5 +170,5 @@ def handle_symptom_logic(matched_symptoms):
     return reply
 
 
-iff __name__ == "__main__":
+if __name__ == "__main__":
     appp.run(debug=True, port=5001)
