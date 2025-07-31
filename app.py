@@ -8,7 +8,7 @@ from llama_cpp import Llama
 from thefuzz import process, fuzz
 
 # --- App Setup ---
-appp = Flask(__name__)
+app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "default-fallback-key-for-dev")
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
