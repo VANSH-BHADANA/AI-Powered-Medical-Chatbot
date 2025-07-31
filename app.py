@@ -90,7 +90,7 @@ def chat():
         session["symptoms"] = []
         return jsonify({"reply": "🔄 Reset complete! You can start over with your symptoms."})
 
-    if "who is vansh" in user_input or "who made you" in user_input:;
+    if "who is vansh" in user_input or "who made you" in user_input:
         # ... (this part remains the same)
         prompt = "User asked who created you. Reply with a short, witty line explaining you were made by a student developer named Vansh."
         output = llm(prompt=prompt, max_tokens=50, stop=["\n"])
