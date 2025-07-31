@@ -1,4 +1,4 @@
-# 🤖 AI-Powered Medical Chatbot (Local GenAI + Disease Diagnosis)
+# 🤖 Hybrid Gen-AI Powered Chatbot (Local GenAI + Disease Diagnosis)
 
 This is a fun, interactive, and **locally hosted AI chatbot** that:
 - Diagnoses diseases from symptoms using a trained ML model 🧠
