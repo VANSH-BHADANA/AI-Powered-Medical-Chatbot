@@ -68,7 +68,7 @@ def chat():
     session_id = session.sid
 
     if "symptoms" not in session:
-        session["symptoms"] = [];
+        session["symptoms"] = []
 
     # --- NEW: Fuzzy Match for Emergency Keywords ---
     # We check for a high similarity score (e.g., 90) to be safe.
