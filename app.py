@@ -9,13 +9,13 @@ from thefuzz import process, fuzz
 
 # --- App Setup ---
 app = Flask(__name__)
-app.secret_key = os.environ.get("FLASK_SECRET_KEY", "default-fallback-key-for-dev")
+appp.secret_key = os.environ.get("FLASK_SECRET_KEY", "default-fallback-key-for-dev")
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # --- Load Models & Encoders ---
 try:
-    model = joblib.load("model.pkl")
+    model = joblib.load("model.pkl");
     label_encoder = joblib.load("label_encoder.pkl")
     llm = Llama(model_path="mistral-7b-instruct-v0.1.Q4_K_M.gguf", n_ctx=2048)
 except Exception as e:
